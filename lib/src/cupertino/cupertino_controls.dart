@@ -371,6 +371,49 @@ class _CupertinoControlsState extends State<CupertinoControls>
     );
   }
 
+  GestureDetector _buildCloseButton(
+    VideoPlayerController controller,
+    Color backgroundColor,
+    Color iconColor,
+    double barHeight,
+    double buttonPadding,
+  ) {
+    return GestureDetector(
+      onTap: () async {
+        if (chewieController.isFullScreen) {
+          chewieController.toggleFullScreen();
+        }
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+      },
+      child: AnimatedOpacity(
+        opacity: notifier.hideStuff ? 0.0 : 1.0,
+        duration: const Duration(milliseconds: 300),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 10.0),
+            child: ColoredBox(
+              color: backgroundColor,
+              child: Container(
+                height: barHeight,
+                padding: EdgeInsets.only(
+                  left: buttonPadding,
+                  right: buttonPadding,
+                ),
+                child: Icon(
+                  Icons.close,
+                  color: iconColor,
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   GestureDetector _buildMuteButton(
     VideoPlayerController controller,
     Color backgroundColor,
@@ -613,7 +656,7 @@ class _CupertinoControlsState extends State<CupertinoControls>
               buttonPadding,
             ),
           const Spacer(),
-          if (chewieController.allowMuting)
+          if (chewieController.allowMuting) ...{
             _buildMuteButton(
               controller,
               backgroundColor,
@@ -621,6 +664,17 @@ class _CupertinoControlsState extends State<CupertinoControls>
               barHeight,
               buttonPadding,
             ),
+            const SizedBox(
+              width: 10,
+            ),
+          },
+          _buildCloseButton(
+            controller,
+            backgroundColor,
+            iconColor,
+            barHeight,
+            buttonPadding,
+          )
         ],
       ),
     );

@@ -151,9 +151,70 @@ class _MaterialControlsState extends State<MaterialControls>
           child: Row(
             children: [
               _buildSubtitleToggle(),
-              if (chewieController.showOptions) _buildOptionsButton(),
+              if (chewieController.showOptions) ...{
+                _buildOptionsButton(),
+                const SizedBox(
+                  width: 10,
+                )
+              }
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCloseButton() {
+    // final options = <OptionItem>[
+    //   OptionItem(
+    //     onTap: () async {
+    //       Navigator.pop(context);
+    //       _onSpeedButtonTap();
+    //     },
+    //     iconData: Icons.speed,
+    //     title: chewieController.optionsTranslation?.playbackSpeedButtonText ??
+    //         'Playback speed',
+    //   )
+    // ];
+
+    // if (chewieController.additionalOptions != null &&
+    //     chewieController.additionalOptions!(context).isNotEmpty) {
+    //   options.addAll(chewieController.additionalOptions!(context));
+    // }
+
+    return AnimatedOpacity(
+      opacity: notifier.hideStuff ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 250),
+      child: IconButton(
+        onPressed: () async {
+          _hideTimer?.cancel();
+          if (chewieController.isFullScreen) {
+            chewieController.toggleFullScreen();
+          }
+          // if (chewieController.optionsBuilder != null) {
+          //   await chewieController.optionsBuilder!(context, options);
+          // } else {
+          //   await showModalBottomSheet<OptionItem>(
+          //     context: context,
+          //     isScrollControlled: true,
+          //     useRootNavigator: chewieController.useRootNavigator,
+          //     builder: (context) => OptionsDialog(
+          //       options: options,
+          //       cancelButtonText:
+          //           chewieController.optionsTranslation?.cancelButtonText,
+          //     ),
+          //   );
+          // }
+
+          if (_latestValue.isPlaying) {
+            _startHideTimer();
+          }
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+        },
+        icon: const Icon(
+          Icons.more_vert,
+          color: Colors.white,
         ),
       ),
     );
